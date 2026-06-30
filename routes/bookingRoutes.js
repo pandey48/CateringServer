@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 
   
 res.json(bookings);
-    res.json(bookings);
+    
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

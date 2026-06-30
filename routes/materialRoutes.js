@@ -22,28 +22,29 @@ router.get("/:id", async (req, res) => {
     booking.menuItems.forEach((menu) => {
       menu.ingredients.forEach((item) => {
 
-        material.push({
-          dish: menu.dishName,
-          ingredient: item.name,
-          quantity: (item.quantity * persons) / 100,
-          unit: item.unit,
-        });
-
+       material.push({
+  dish: menu.dishName,
+  category: item.category,
+  ingredient: item.name,
+  quantity: (item.quantity * persons) / 100,
+  unit: item.unit,
+});
       });
     });
     const mergedMaterial = {};
 
 material.forEach((item) => {
-  const key = `${item.ingredient}_${item.unit}`;
+  const key = `${item.category}_${item.ingredient}_${item.unit}`;
 
   if (mergedMaterial[key]) {
     mergedMaterial[key].quantity += Number(item.quantity);
   } else {
     mergedMaterial[key] = {
-      ingredient: item.ingredient,
-      quantity: Number(item.quantity),
-      unit: item.unit,
-    };
+  category: item.category,
+  ingredient: item.ingredient,
+  quantity: Number(item.quantity),
+  unit: item.unit,
+};
   }
 });
 

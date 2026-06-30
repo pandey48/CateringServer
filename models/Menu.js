@@ -1,9 +1,22 @@
 const mongoose = require("mongoose");
 
 const ingredientSchema = new mongoose.Schema({
-  name: String,
-  quantity: Number,
-  unit: String,
+  category: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  unit: {
+    type: String,
+    required: true,
+  },
 });
 
 const menuSchema = new mongoose.Schema(
@@ -20,9 +33,13 @@ const menuSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+
+    // Ingredients Array
     ingredients: [ingredientSchema],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Menu", menuSchema);
