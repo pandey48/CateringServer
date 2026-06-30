@@ -45,7 +45,6 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.post("/", async (req, res) => {
-  res.json({ message: "Menu API Working" });
-});
+
+
 module.exports = router;
