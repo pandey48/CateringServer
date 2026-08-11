@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+
 const app = express();
 
 // CORS
@@ -40,8 +41,8 @@ app.use("/api/invoices", require("./routes/invoiceRoutes"));
 
 // Test API
 app.use(
-  "/api/employee-work",
-  require("./routes/employeeWorkRoutes")
+  "/api/employees",
+  require("./routes/employeeRoutes")
 );
 app.get("/", (req, res) => {
   res.json({
