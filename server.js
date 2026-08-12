@@ -44,6 +44,10 @@ app.use(
   "/api/employees",
   require("./routes/employeeRoutes")
 );
+app.use(
+  "/api/employee-work",
+  require("./routes/employeeWorkRoutes")
+);
 app.get("/", (req, res) => {
   res.json({
     message: "Catering API is running",

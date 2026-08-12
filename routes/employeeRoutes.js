@@ -1,49 +1,78 @@
 const express = require("express");
 const router = express.Router();
 
-const EmployeeWork = require("../models/Employee");
+const Employee = require("../models/employee");
 
-// Add work
+// ===============================
+// CREATE EMPLOYEE
+// POST /api/employees
+// ===============================
+
 router.post("/", async (req, res) => {
   try {
-    const work = await EmployeeWork.create(req.body);
+    console.log("========== EMPLOYEE CREATE ==========");
+    console.log("Request Body:", req.body);
 
-    res.status(201).json(work);
+    const employee = await Employee.create({
+      name: req.body.name,
+      phone: req.body.phone,
+      role: req.body.role,
+      address: req.body.address || "",
+      dailyRate: Number(req.body.dailyRate) || 0,
+      status: req.body.status || "Active",
+    });
+
+    console.log("Employee Created:", employee);
+
+    res.status(201).json(employee);
+
   } catch (error) {
+    console.error("========== EMPLOYEE CREATE ERROR ==========");
+    console.error(error);
+
     res.status(500).json({
       message: error.message,
     });
   }
 });
 
+// ===============================
+// GET ALL EMPLOYEES
+// GET /api/employees
+// ===============================
 
-// Get all work
 router.get("/", async (req, res) => {
   try {
-    const works = await EmployeeWork.find()
-      .populate("employee")
-      .populate("booking")
-      .sort({ workDate: -1 });
+    const employees = await Employee.find().sort({
+      createdAt: -1,
+    });
 
-    res.json(works);
+    res.json(employees);
   } catch (error) {
+    console.error("Employee Fetch Error:", error);
+
     res.status(500).json({
       message: error.message,
     });
   }
 });
 
+// ===============================
+// GET SINGLE EMPLOYEE
+// GET /api/employees/:id
+// ===============================
 
-// Get employee work history
-router.get("/employee/:employeeId", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const works = await EmployeeWork.find({
-      employee: req.params.employeeId,
-    })
-      .populate("booking")
-      .sort({ workDate: -1 });
+    const employee = await Employee.findById(req.params.id);
 
-    res.json(works);
+    if (!employee) {
+      return res.status(404).json({
+        message: "Employee not found",
+      });
+    }
+
+    res.json(employee);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -51,45 +80,68 @@ router.get("/employee/:employeeId", async (req, res) => {
   }
 });
 
+// ===============================
+// UPDATE EMPLOYEE
+// PUT /api/employees/:id
+// ===============================
 
-// Update work/payment
 router.put("/:id", async (req, res) => {
   try {
-    const work = await EmployeeWork.findByIdAndUpdate(
+    const employee = await Employee.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      {
+        name: req.body.name,
+        phone: req.body.phone,
+        role: req.body.role,
+        address: req.body.address || "",
+        dailyRate: Number(req.body.dailyRate) || 0,
+        status: req.body.status || "Active",
+      },
       {
         new: true,
         runValidators: true,
       }
     );
 
-    if (!work) {
+    if (!employee) {
       return res.status(404).json({
-        message: "Work record not found",
+        message: "Employee not found",
       });
     }
 
-    res.json(work);
+    res.json(employee);
   } catch (error) {
+    console.error("Employee Update Error:", error);
+
     res.status(500).json({
       message: error.message,
     });
   }
 });
 
+// ===============================
+// DELETE EMPLOYEE
+// DELETE /api/employees/:id
+// ===============================
 
-// Delete work
 router.delete("/:id", async (req, res) => {
   try {
-    await EmployeeWork.findByIdAndDelete(
+    const employee = await Employee.findByIdAndDelete(
       req.params.id
     );
 
+    if (!employee) {
+      return res.status(404).json({
+        message: "Employee not found",
+      });
+    }
+
     res.json({
-      message: "Work record deleted",
+      message: "Employee deleted successfully",
     });
   } catch (error) {
+    console.error("Employee Delete Error:", error);
+
     res.status(500).json({
       message: error.message,
     });

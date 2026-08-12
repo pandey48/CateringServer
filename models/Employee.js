@@ -1,49 +1,41 @@
 const mongoose = require("mongoose");
 
-const employeeWorkSchema = new mongoose.Schema(
+const employeeSchema = new mongoose.Schema(
   {
-    employee: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Employee",
+    name: {
+      type: String,
       required: true,
+      trim: true,
     },
 
-    booking: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Booking",
-      default: null,
-    },
-
-    workDate: {
-      type: Date,
+    phone: {
+      type: String,
       required: true,
+      trim: true,
     },
 
     role: {
       type: String,
       required: true,
+      trim: true,
     },
 
-    amount: {
+    address: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    dailyRate: {
       type: Number,
       required: true,
       default: 0,
     },
 
-    paymentStatus: {
+    status: {
       type: String,
-      enum: ["Pending", "Paid"],
-      default: "Pending",
-    },
-
-    paymentDate: {
-      type: Date,
-      default: null,
-    },
-
-    note: {
-      type: String,
-      default: "",
+      enum: ["Active", "Inactive"],
+      default: "Active",
     },
   },
   {
@@ -51,7 +43,4 @@ const employeeWorkSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model(
-  "EmployeeWork",
-  employeeWorkSchema
-);
+module.exports = mongoose.model("Employee", employeeSchema);
