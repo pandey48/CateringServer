@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const EmployeeWork = require("../models/employeeWork");
-const Employee = require("../models/employee");
+const Employee = require("../models/Employee");
 
 console.log("✅ employeeWorkRoutes.js loaded");
 
