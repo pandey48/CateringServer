@@ -1,37 +1,58 @@
-const express = require('express');
+const express = require("express");
+const jwt = require("jsonwebtoken");
+
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
 
-// Register (admin use or seed)
-router.post('/register', async (req,res)=>{
-  try{
-    const { name, email, password, role } = req.body;
-    let user = await User.findOne({ email });
-    if(user) return res.status(400).json({ msg: 'User already exists' });
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    user = new User({ name, email, password: hash, role });
-    await user.save();
-    const payload = { user: { id: user.id, role: user.role } };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
-  }catch(err){ console.error(err); res.status(500).send('Server error'); }
-});
-
-// Login
-router.post('/login', async (req,res)=>{
-  try{
+// ==========================
+// ADMIN LOGIN
+// ==========================
+router.post("/login", async (req, res) => {
+  try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if(!user) return res.status(400).json({ msg: 'Invalid credentials' });
-    const isMatch = await bcrypt.compare(password, user.password);
-    if(!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
-    const payload = { user: { id: user.id, role: user.role } };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
-  }catch(err){ console.error(err); res.status(500).send('Server error'); }
+
+    console.log("Login ID:", email);
+
+    // Check ID and password from .env
+    if (
+      email !== process.env.ADMIN_EMAIL ||
+      password !== process.env.ADMIN_PASSWORD
+    ) {
+      return res.status(400).json({
+        msg: "Invalid Admin ID or Password",
+      });
+    }
+
+    // Create JWT token
+    const token = jwt.sign(
+      {
+        user: {
+          id: "admin",
+          role: "admin",
+        },
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    res.json({
+      token,
+      user: {
+        id: "admin",
+        name: "Pandey Catering Admin",
+        email: process.env.ADMIN_EMAIL,
+        role: "admin",
+      },
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+
+    res.status(500).json({
+      msg: "Server error",
+    });
+  }
 });
 
 module.exports = router;

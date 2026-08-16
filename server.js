@@ -30,6 +30,10 @@ mongoose
   .catch((err) => {
     console.error("MongoDB Connection Error:", err);
   });
+  const authRoutes = require("./routes/auth");
+  const invoiceRoutes = require("./routes/invoiceRoutes");
+
+app.use("/api/auth", authRoutes);
 
 // Routes
 app.use("/api/users", require("./routes/userRoutes"));
@@ -38,6 +42,8 @@ app.use("/api/bookings", require("./routes/bookingRoutes"));
 app.use("/api/menu", require("./routes/menuRoutes"));
 app.use("/api/material", require("./routes/materialRoutes"));
 app.use("/api/invoices", require("./routes/invoiceRoutes"));
+app.use("/api/invoices", invoiceRoutes);
+
 
 // Test API
 app.use(

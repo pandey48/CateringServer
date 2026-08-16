@@ -5,31 +5,66 @@ const invoiceSchema = new mongoose.Schema(
     invoiceNo: {
       type: String,
       unique: true,
+      required: true,
     },
 
     booking: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Booking",
+      required: true,
+      unique: true,
     },
 
-    customerName: String,
+    customerName: {
+      type: String,
+      required: true,
+    },
 
-    phone: String,
+    phone: {
+      type: String,
+      required: true,
+    },
 
-    eventDate: Date,
+    eventType: {
+      type: String,
+    },
 
-    eventType: String,
+    eventDate: {
+      type: Date,
+    },
 
-    persons: Number,
+    persons: {
+      type: Number,
+    },
 
-    totalAmount: Number,
+    address: {
+      type: String,
+    },
+
+    // Only selected menu names
+    menuItems: [
+      {
+        type: String,
+      },
+    ],
+
+    totalAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
 
     advanceAmount: {
       type: Number,
       default: 0,
+      min: 0,
     },
 
-    balanceAmount: Number,
+    balanceAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
 
     paymentStatus: {
       type: String,
@@ -37,7 +72,9 @@ const invoiceSchema = new mongoose.Schema(
       default: "Pending",
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Invoice", invoiceSchema);
