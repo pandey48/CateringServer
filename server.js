@@ -10,8 +10,10 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "https://catering-project-six.vercel.app",
+      "http://localhost:3000",
+    "https://www.pandeycatering.in",
+    "https://pandeycatering.in"
+      
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,

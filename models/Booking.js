@@ -8,6 +8,9 @@ const bookingSchema = new mongoose.Schema(
     eventType: String,
     persons: Number,
     address: String,
+    city: String,
+    service: String,
+    source: String,
 
     // Selected Dishes
     menuItems: [
